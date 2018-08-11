@@ -1,0 +1,4 @@
+-i https://pypi.org/simple
+django==2.1
+djangorestframework==3.8.2
+pytz==2018.5
