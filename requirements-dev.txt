@@ -1,0 +1,9 @@
+-i https://pypi.org/simple
+atomicwrites==1.1.5
+attrs==18.1.0
+more-itertools==4.3.0
+pluggy==0.7.1; python_version >= '2.7'
+py==1.5.4; python_version >= '2.7'
+pytest-django==3.3.3
+pytest==3.7.1
+six==1.11.0
