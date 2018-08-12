@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e5c443d0dcd825d5880e6f3934f1c268c91ef4ccfd8665923dd459a9977a2f49"
+            "sha256": "41955e55664c14bf1245e34a2072aa806c60e5dc1dc563e349a9d660592e1c8c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,6 +31,10 @@
             ],
             "index": "pypi",
             "version": "==3.8.2"
+        },
+        "drf-extensions": {
+            "git": "https://github.com/chibisov/drf-extensions",
+            "ref": "9cc953bb8da6a0e08ce03f9af5c41b072aa37ecd"
         },
         "python-dotenv": {
             "hashes": [

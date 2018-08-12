@@ -1,5 +1,6 @@
 -i https://pypi.org/simple
 django==2.1
 djangorestframework==3.8.2
+git+https://github.com/chibisov/drf-extensions@9cc953bb8da6a0e08ce03f9af5c41b072aa37ecd#egg=drf-extensions
 python-dotenv==0.9.1
 pytz==2018.5
