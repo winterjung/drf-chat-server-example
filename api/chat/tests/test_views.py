@@ -1,19 +1,20 @@
 import pytest
-from django.test import Client
 
 from api.chat.models import Room
+from api.chat.tests.utils import LoginableTestCase
 
 
 @pytest.mark.django_db
-class TestRoomView:
-    def test_room_list_without_data(self, client: Client):
-        res = client.get('/v1/rooms/')
+class TestRoomView(LoginableTestCase):
+    def test_room_list_without_data(self, users):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/')
         assert res.status_code == 200
-        data = res.json()
-        assert data == []
+        assert res.data == []
 
-    def test_room_list_with_data(self, client: Client, room):
-        res = client.get('/v1/rooms/')
+    def test_room_list_with_data(self, room):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/')
         assert res.status_code == 200
         data = res.json()
         assert len(data) == 1
@@ -25,8 +26,9 @@ class TestRoomView:
         assert room['participants'][0] == 1
         assert room['participants'][1] == 2
 
-    def test_room_detail(self, client: Client, room):
-        res = client.get('/v1/rooms/1/')
+    def test_room_detail(self, room):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/')
         assert res.status_code == 200
         data = res.json()
         assert data['id'] == 1
@@ -35,21 +37,24 @@ class TestRoomView:
         assert data['participants'][0] == 1
         assert data['participants'][1] == 2
 
-    def test_room_detail_non_exist(self, client: Client):
-        res = client.get('/v1/rooms/1/')
+    def test_room_detail_non_exist(self, users):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/')
         assert res.status_code == 404
 
 
 @pytest.mark.django_db
-class TestMessageView:
-    def test_msg_list_without_data(self, client: Client, room):
-        res = client.get('/v1/rooms/1/messages/')
+class TestMessageView(LoginableTestCase):
+    def test_msg_list_without_data(self, room):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/')
         assert res.status_code == 200
         data = res.json()
         assert data == []
 
-    def test_msg_list_with_data(self, client: Client, room, msg):
-        res = client.get('/v1/rooms/1/messages/')
+    def test_msg_list_with_data(self, room, msg):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/')
         assert res.status_code == 200
         data = res.json()
         assert len(data) == 1
