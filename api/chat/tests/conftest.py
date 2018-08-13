@@ -21,6 +21,14 @@ def users():
 
 
 @pytest.fixture
+def another_user():
+    u = User.objects.create(username='003')
+    u.set_password('003')
+    u.save()
+    return u
+
+
+@pytest.fixture
 def room(users):
     r = Room.objects.create(title='test001')
     r.participants.set(users)
@@ -32,3 +40,13 @@ def msg(users, room):
     m = Message(content='hello', room=room, sender=users[0])
     m.save()
     return m
+
+
+@pytest.fixture
+def conversation(users, room):
+    Message.objects.create(content='hello', room=room, sender=users[0])
+    Message.objects.create(content='world', room=room, sender=users[1])
+    Message.objects.create(content='how are you?', room=room, sender=users[0])
+    Message.objects.create(content='im good', room=room, sender=users[1])
+    Message.objects.create(content='see you later', room=room, sender=users[0])
+    Message.objects.create(content='bye', room=room, sender=users[1])

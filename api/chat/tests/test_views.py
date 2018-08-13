@@ -42,6 +42,27 @@ class TestRoomView(LoginableTestCase):
         res = self.client.get('/v1/rooms/1/')
         assert res.status_code == 404
 
+    def test_not_my_room(self, another_user, room):
+        self.login('003', '003')
+        res = self.client.get('/v1/rooms/')
+        assert res.status_code == 200
+        assert res.data == []
+        res = self.client.get('/v1/rooms/1/')
+        assert res.status_code == 404
+
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/')
+        assert res.data != []
+
+    def test_our_room(self, room):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/')
+        rooms_of_001 = res.data
+        self.login('002', '002')
+        res = self.client.get('/v1/rooms/')
+        rooms_of_002 = res.data
+        assert rooms_of_001 == rooms_of_002
+
 
 @pytest.mark.django_db
 class TestMessageView(LoginableTestCase):
@@ -56,9 +77,27 @@ class TestMessageView(LoginableTestCase):
         self.login('001', '001')
         res = self.client.get('/v1/rooms/1/messages/')
         assert res.status_code == 200
-        data = res.json()
+        data = res.data
         assert len(data) == 1
         msg = data[0]
         assert msg['id'] == 1
         assert msg['sender'] == 1
         assert msg['content'] == 'hello'
+
+    def test_not_my_messages(self, another_user, room, conversation):
+        self.login('003', '003')
+        res = self.client.get('/v1/rooms/1/messages/')
+        assert res.status_code == 404
+
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/')
+        assert len(res.data) == 6
+
+    def test_our_messages(self, room, conversation):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/')
+        msgs_of_001 = res.data
+        self.login('002', '002')
+        res = self.client.get('/v1/rooms/1/messages/')
+        msgs_of_002 = res.data
+        assert msgs_of_001 == msgs_of_002
