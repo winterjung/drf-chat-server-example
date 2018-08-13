@@ -5,6 +5,52 @@ from api.chat.tests.utils import LoginableTestCase
 
 
 @pytest.mark.django_db
+class TestUserView(LoginableTestCase):
+    def test_register(self):
+        data = {
+            'username': '001',
+            'password': '001',
+        }
+        res = self.client.post('/v1/users/', data=data)
+        assert res.status_code == 201
+    def test_register_fail_no_password(self):
+        data = {
+            'username': '001',
+        }
+        res = self.client.post('/v1/users/', data=data)
+        assert res.status_code == 400
+
+    def test_register_fail_no_username(self):
+        data = {
+            'password': '001',
+        }
+        res = self.client.post('/v1/users/', data=data)
+        assert res.status_code == 400
+
+    def test_register_fail_exist_username(self, users):
+        data = {
+            'username': '001',
+            'password': '001',
+        }
+        res = self.client.post('/v1/users/', data=data)
+        assert res.status_code == 400
+
+    def test_my_detail(self, users):
+        res = self.client.get('/v1/users/1/')
+        assert res.status_code == 401
+        self.login('001', '001')
+        res = self.client.get('/v1/users/1/')
+        assert res.status_code == 200
+
+    def test_not_my_detail(self, users):
+        self.login('001', '001')
+        res = self.client.get('/v1/users/2/')
+        assert res.status_code == 404
+        res = self.client.delete('/v1/users/2/')
+        assert res.status_code == 404
+
+
+@pytest.mark.django_db
 class TestRoomView(LoginableTestCase):
     def test_room_list_without_data(self, users):
         self.login('001', '001')
