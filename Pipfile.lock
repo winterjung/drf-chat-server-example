@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "77dccadad61e903de6c8745abd96528e74adbc462dd15012b3e9ad05f1c3b92f"
+            "sha256": "8785e7d25e6eddb43da5efb976efa16bf88efb0f79efbda489d4c9cfa51b52af"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -32,9 +32,24 @@
             "index": "pypi",
             "version": "==3.8.2"
         },
+        "djangorestframework-simplejwt": {
+            "hashes": [
+                "sha256:7e768f4198319ab81dbf56c3c873c83df6a2c116dbdc08d180920346c970f9a3",
+                "sha256:f047610ec3038dc3b2017538c60f5623a27fc834348217540e4a00db0276f8c6"
+            ],
+            "index": "pypi",
+            "version": "==3.2.3"
+        },
         "drf-extensions": {
             "git": "https://github.com/chibisov/drf-extensions",
             "ref": "9cc953bb8da6a0e08ce03f9af5c41b072aa37ecd"
+        },
+        "pyjwt": {
+            "hashes": [
+                "sha256:30b1380ff43b55441283cc2b2676b755cca45693ae3097325dea01f3d110628c",
+                "sha256:4ee413b357d53fd3fb44704577afac88e72e878716116270d722723d65b42176"
+            ],
+            "version": "==1.6.4"
         },
         "python-dotenv": {
             "hashes": [

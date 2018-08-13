@@ -5,9 +5,11 @@ from api.chat.models import Message, Room
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'password')
 
 
 class RoomSerializer(serializers.ModelSerializer):
