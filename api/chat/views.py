@@ -1,14 +1,24 @@
 from django.contrib.auth.models import User
 from django.http import Http404
-from rest_framework import generics, viewsets
+from rest_framework import generics, permissions, viewsets
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from api.chat import models, serializers
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class CreateUserView(generics.CreateAPIView):
+    permission_classes = (permissions.AllowAny, )
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+
+
+class DetailUserView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return User.objects.filter(id=user.id)
 
 
 class RoomViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
