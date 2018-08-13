@@ -5,6 +5,8 @@ from api.settings.base import *
 DEBUG = False
 SECRET_KEY = os.urandom(64)
 
+ALLOWED_HOSTS = ['localhost']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
