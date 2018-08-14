@@ -13,6 +13,18 @@ class TestUserView(LoginableTestCase):
         }
         res = self.client.post('/v1/users/', data=data)
         assert res.status_code == 201
+
+    def test_login_after_register(self):
+        data = {
+            'username': '001',
+            'password': '001',
+        }
+        res = self.client.post('/v1/users/', data=data)
+        assert res.status_code == 201
+        self.login('001', '001')
+        res = self.client.get('/v1/users/1/')
+        assert res.status_code == 200
+
     def test_register_fail_no_password(self):
         data = {
             'username': '001',
