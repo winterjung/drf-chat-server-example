@@ -147,3 +147,29 @@ class TestMessageView(LoginableTestCase):
         res = self.client.get('/v1/rooms/1/messages/')
         msgs_of_002 = res.data
         assert msgs_of_001 == msgs_of_002
+
+    def test_one(self, conversation):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/1/')
+        assert res.data['id'] == 1
+        assert res.data['sender'] == 1
+        assert res.data['content'] == 'hello'
+
+    def test_search(self, conversation):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/?q=you')
+        assert len(res.data) == 2
+        assert res.data[0]['content'] == 'how are you?'
+        assert res.data[1]['content'] == 'see you later'
+
+    def test_search_empty(self, conversation):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/?q=')
+        assert len(res.data) == 6
+
+    def test_search_only_in_list(self, conversation):
+        self.login('001', '001')
+        res = self.client.get('/v1/rooms/1/messages/1/?q=you')
+        assert res.data['id'] == 1
+        assert res.data['sender'] == 1
+        assert res.data['content'] == 'hello'
