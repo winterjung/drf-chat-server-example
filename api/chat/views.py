@@ -40,4 +40,9 @@ class MessageViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         user = self.request.user
         if not user.room_set.filter(id=room_id):
             raise Http404
-        return super().get_queryset()
+
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        if query and self.action == 'list':
+            queryset = queryset.filter(content__icontains=query)
+        return queryset
