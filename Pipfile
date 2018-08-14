@@ -9,6 +9,8 @@ djangorestframework = "*"
 python-dotenv = "*"
 drf-extensions = {git = "https://github.com/chibisov/drf-extensions"}
 djangorestframework-simplejwt = "*"
+django-background-tasks = "*"
+requests = "*"
 
 [dev-packages]
 pytest = "*"
