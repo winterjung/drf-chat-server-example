@@ -11,6 +11,7 @@ class Room(models.Model):
 
 
 class Message(models.Model):
+    created_at = models.DateTimeField(auto_now=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     content = models.TextField(blank=True)

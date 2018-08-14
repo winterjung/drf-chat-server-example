@@ -129,6 +129,7 @@ class TestMessageView(LoginableTestCase):
         assert msg['id'] == 1
         assert msg['sender'] == 1
         assert msg['content'] == 'hello'
+        assert msg['created_at'] is not None
 
     def test_not_my_messages(self, another_user, room, conversation):
         self.login('003', '003')

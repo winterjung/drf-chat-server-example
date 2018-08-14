@@ -25,6 +25,7 @@ class TestBasicModels:
         assert msg.content == 'hello'
         assert msg.room.id == 1
         assert msg.sender.id == 1
+        assert msg.created_at is not None
 
     @patch('api.chat.signals.post_save.send')
     def test_message_signal(self, mock, users, room):

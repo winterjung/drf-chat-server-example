@@ -1,9 +1,10 @@
-import requests
-from django.db.models.signals import post_save
+from django.conf import settings
+from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
-from background_task import background
+from django.utils import timezone
 
 from api.chat.models import Message
+from api.chat.tasks import push, msg_remover
 
 
 @receiver(post_save, sender=Message)
@@ -14,13 +15,14 @@ def push_notification(sender, instance, **kwargs):
         push(to=person.id, content=msg.content)
 
 
-@background
-def push(to, content):
-    data = {
-        'device_id': to,
-        'content': content,
-    }
-    try:
-        requests.post('localhost:7000', json=data)
-    except requests.exceptions.InvalidSchema:
-        pass
+@receiver(post_migrate)
+def start_tasks(sender, **kwargs):
+    lifetime = settings.MSG_LIFETIME
+    msg_remover(
+        lifetime,
+        repeat=lifetime / 10,
+        schedule=dict(
+            run_at=timezone.now(),
+            action=1,
+        ),
+    )
