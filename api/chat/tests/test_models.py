@@ -1,4 +1,7 @@
+from unittest.mock import patch
+
 import pytest
+from django.db.models.signals import post_save
 
 from api.chat.models import Message, Room, User
 
@@ -22,3 +25,18 @@ class TestBasicModels:
         assert msg.content == 'hello'
         assert msg.room.id == 1
         assert msg.sender.id == 1
+
+    @patch('api.chat.signals.post_save.send')
+    def test_message_signal(self, mock, users, room):
+        Message.objects.create(content='test', room=room, sender=users[0])
+        assert mock.called
+        assert mock.call_count == 1
+
+    def test_message_receiver(self, users, room):
+        self.called = False
+        def handler(sender, **kwargs):
+            self.called = True
+        post_save.connect(handler)
+
+        Message.objects.create(content='test', room=room, sender=users[0])
+        assert self.called
