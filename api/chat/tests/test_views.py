@@ -123,6 +123,52 @@ class TestRoomView(LoginableTestCase):
 
 
 @pytest.mark.django_db
+class TestCreateRoomView(LoginableTestCase):
+    def test_create(self, users):
+        self.login('001', '001')
+        data = {
+            'title': 'test001',
+            'participants': [
+                users[0].id,
+                users[1].id,
+            ],
+        }
+        res = self.client.post('/v1/rooms/', data=data)
+        assert res.status_code == 201
+
+    def test_empty_title(self, users):
+        self.login('001', '001')
+        data = {
+            'participants': [
+                users[0].id,
+                users[1].id,
+            ],
+        }
+        res = self.client.post('/v1/rooms/', data=data)
+        assert res.status_code == 201
+        assert res.data['title'] == ''
+
+    def test_invalid_participants(self, users):
+        self.login('001', '001')
+        data = {
+            'title': 'test001',
+            'participants': [
+                users[1].id,
+            ],
+        }
+        res = self.client.post('/v1/rooms/', data=data)
+        assert res.status_code == 400
+
+    def test_empty_participants(self, users):
+        self.login('001', '001')
+        data = {
+            'title': 'test001',
+        }
+        res = self.client.post('/v1/rooms/', data=data)
+        assert res.status_code == 400
+
+
+@pytest.mark.django_db
 class TestMessageView(LoginableTestCase):
     def test_msg_list_without_data(self, room):
         self.login('001', '001')
@@ -186,3 +232,60 @@ class TestMessageView(LoginableTestCase):
         assert res.data['id'] == 1
         assert res.data['sender'] == 1
         assert res.data['content'] == 'hello'
+
+
+@pytest.mark.django_db
+class TestCreateMessageView(LoginableTestCase):
+    def test_create(self, room):
+        self.login('001', '001')
+        data = {
+            'sender': 1,
+            'room': room.id,
+            'content': 'hello',
+        }
+        res = self.client.post('/v1/rooms/1/messages/', data=data)
+        assert res.status_code == 201
+
+    def test_non_exist_room(self, another_user, room):
+        self.login('003', '003')
+        data = {
+            'sender': another_user.id,
+            'room': 1,
+            'content': 'hello',
+        }
+        res = self.client.post('/v1/rooms/1/messages/', data=data)
+        assert res.status_code == 400
+
+    def test_wrong_room(self, another_user, room, users):
+        r = Room.objects.create(title='test002')
+        r.participants.set((another_user, users[1]))
+        self.login('001', '001')
+        data = {
+            'sender': users[0].id,
+            'room': 2,
+            'content': 'hello',
+        }
+        res = self.client.post('/v1/rooms/1/messages/', data=data)
+        assert res.status_code == 400
+
+    def test_wrong_room_url(self, another_user, room, users):
+        r = Room.objects.create(title='test002')
+        r.participants.set((another_user, users[1]))
+        self.login('001', '001')
+        data = {
+            'sender': users[0].id,
+            'room': 1,
+            'content': 'hello',
+        }
+        res = self.client.post('/v1/rooms/2/messages/', data=data)
+        assert res.status_code == 400
+
+    def test_wrong_sender(self, room, another_user):
+        self.login('001', '001')
+        data = {
+            'sender': another_user.id,
+            'room': 1,
+            'content': 'hello',
+        }
+        res = self.client.post('/v1/rooms/1/messages/', data=data)
+        assert res.status_code == 400
