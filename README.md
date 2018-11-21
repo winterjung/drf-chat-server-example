@@ -1,5 +1,7 @@
 # DRF chat server example
 
+[English](./README.md) | [한국어](./README_kr.md)
+
 A RESTful chat API server example used Django REST framework with pytest
 
 ## Used stack
@@ -20,7 +22,7 @@ A RESTful chat API server example used Django REST framework with pytest
 
 ## API
 
-You can see [API document](https://github.com/JungWinter/drf-chat-server-example/blob/develop/API-spec.md)
+You can see [API document](./API-spec.md)
 
 ## Development story
 

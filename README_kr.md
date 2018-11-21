@@ -1,5 +1,7 @@
 # DRF chat server example
 
+[English](./README.md) | [한국어](./README_kr.md)
+
 Django REST framework와 pytest를 이용한 RESTful 채팅 API 서버 예제입니다.
 
 ## 사용된 스택
@@ -20,7 +22,7 @@ Django REST framework와 pytest를 이용한 RESTful 채팅 API 서버 예제입
 
 ## API
 
-[API 문서](https://github.com/JungWinter/drf-chat-server-example/blob/develop/API-spec.md)에서 확인 가능합니다.
+[API 문서](./API-spec.md)에서 확인 가능합니다.
 
 ## 개발 과정
 
